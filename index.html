@@ -1,1 +1,104 @@
-My Page
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="OnoMap Community maps">
+        <meta name="author" content="Erwan Bocher">
+        <link rel="shortcut icon" href="assets/ico/favicon.png">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.css" />
+	<link href="assets/css/leaflet-search.min.css" rel="stylesheet">
+
+<style type="text/css">
+		html, body {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+		}
+		.leaflet-control-scale-line {
+		 	box-sizing: border-box;
+		}
+	</style>
+
+        <title>OnoMap Community maps</title>
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="assets/js/html5shiv.js"></script>
+          <script src="assets/js/respond.min.js"></script>
+        <![endif]-->
+    </head>
+
+
+    <body>
+ <div id="map" style="width: 100%; height: 100%"></div>
+
+	<script src="http://cdn.leafletjs.com/leaflet-1.0.0-b1/leaflet.js"></script>
+	<script type="text/javascript" src="https://cdn.rawgit.com/ardhi/Leaflet.MousePosition/master/src/L.Control.MousePosition.js"></script>
+	<script src="https://raw.githubusercontent.com/heigeo/leaflet.wms/gh-pages/leaflet.wms.js"></script>
+	<script type="text/javascript" src="assets/js/leaflet-search.min.js"></script>
+	
+<script>
+		
+
+var tilelayer_properties = {
+    opacity: 0.7,
+    attribution: '<span data-l10n-id="attribution_osm">Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors</span>'
+    }
+
+var map = L.map('map').setView([47.1535576,-1.6502087], 15);
+var osm_stamen = new L.TileLayer('http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', tilelayer_properties);
+
+
+
+
+var url = "http://onomap-gs.noise-planet.org:80/geoserver/noisecapture/wms";
+
+
+
+var wmsSource = L.WMS.source(
+                            url,
+                            {
+                                "format": "image/png",
+                                "transparent": "true",
+                                "attribution": "<a href='http://onomap-gs.noise-planet.org'>OnoMap server</a>",
+                                "tiled": false
+                            }
+                    );
+
+var basemaps = {
+                    'Basemap': osm_stamen.addTo(map)
+                };
+
+var layers = {
+                        'Noise HeatMap': wmsSource.getLayer("noisecapture:heatmap_raw_points"),
+			'Noise level points': wmsSource.getLayer("noisecapture:raw_points")
+                    };
+                    for (var name in layers) {
+                        layers[name].addTo(map);
+                    }
+                    L.control.layers(basemaps, layers).addTo(map);
+
+
+
+		L.control.scale({imperial: false}).addTo(map);
+		L.control.mousePosition().addTo(map);
+		/* Search control */
+map.addControl(new L.Control.Search({
+    url: 'https://nominatim.openstreetmap.org/search?format=json&q={s}',
+    jsonpParam: 'json_callback',
+    propertyName: 'display_name',
+    propertyLoc: ['lat','lon'],
+    markerLocation: true,
+    autoType: false,
+    autoCollapse: true,
+    minLength: 2,
+    zoom:15
+}));
+
+
+	</script>
+  
+
+</body>
+</html>
