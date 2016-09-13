@@ -42,7 +42,7 @@
 		
 
 var tilelayer_properties = {
-    opacity: 0.7,
+    opacity: 0.8,
     attribution: '<span data-l10n-id="attribution_osm">Map data &copy; <a href="http://openstreetmap.org/">OpenStreetMap</a> contributors</span>'
     }
 
@@ -71,8 +71,8 @@ var basemaps = {
                 };
 
 var layers = {
-                        'Noise HeatMap': wmsSource.getLayer("noisecapture:heatmap_raw_points"),
-			'Noise level points': wmsSource.getLayer("noisecapture:raw_points")
+                        'HeatMap of measures': wmsSource.getLayer("noisecapture:heatmap_raw_points_density"),
+			'Noise level (in Db)': wmsSource.getLayer("noisecapture:raw_points")
                     };
                     for (var name in layers) {
                         layers[name].addTo(map);
